@@ -2,12 +2,18 @@ var startBtn = document.querySelector(".startBtn");
 var homePage = document.querySelector(".homePage");
 var showQuestions = document.getElementById("container");
 var spanEl = document.getElementById("secondsLeft")
-var timeLeft = 100;
 var currentQuestion = 0;
 var quizContainer = document.getElementById("container");
-var titleEl = document.createElement("h1")
+var titleEl = document.querySelector(".questionAsked")
+var choiceRef = document.querySelector(".choiceOpts")
+var confirmAnswer = "";
+var clearChoices = document.querySelector(".choiceOpts");
+var imageEl = document.getElementById("image");
+var quizDone = document.getElementById("results");
+var timeDone = document.getElementById("timer");
+var timeShow = document.querySelector(".showTime");
 
-var timer;
+
 var allQuestions = [
 
     {
@@ -63,7 +69,7 @@ var allQuestions = [
         question: "When is Tuna's birthday?",
         choices: ["12/7", "9/24", "7/14", "3/17"],
         answer: "3/17",
-        img: "./assets/images/tunabday.jpeg",
+        img: "./assets/images/tunaday.png",
     },
 
     {
@@ -77,40 +83,123 @@ var allQuestions = [
         question: "How cute are Marina's cats?",
         choices: ["so cute omg", "the cutest cats ever to exist", "very beautiful", "too cute it hurts"],
         answer: "the cutest cats ever to exist" ,
-        img: "./assets/images/3cats.jpeg",
+        img: "./assets/images/allbbs.jpg",
     }, 
 ];
 //Starting the quiz
 function startQuiz(){
-
     hideHome();
     showQuestion();
     startTime();
-
 };
 
 //Home page gets hidden
 
 function hideHome(){
     homePage.style.display = "none";
-};
+    startBtn.style.display = "none";
+}
+
+//hide questions once completed
+
+function hideQ(){
+    quizContainer.style.display = "none";
+}
+
+//function for results page
+function showResults(){
+    quizDone.style.cssText = `
+    display: block; 
+    text-align: center;
+    `;
+}
+
+//function to hide time when quiz is over
+
+function hideTime(){
+    timeDone.style.cssText = `
+    display: none;
+    `;
+}
 
 //Questions start
 
 function showQuestion(){
+    
     var q = allQuestions[currentQuestion];
-}
+    
+    timeDone.style.display = "block";//takes timer from hidden to showing
+    clearChoices.innerHTML = "" // clears old choices
+    imageEl.innerHTML = "" // clears img from each q
 
-//create a loop for questions, show question.loop choice and create buttons, attach event listener to choice buttons
+    //appending img to each q
+
+    var picture = q.img;
+    var image = document.createElement("img");
+    image.setAttribute("src", picture);
+    imageEl.append(image);
+    
+
+    //questions only
+    titleEl.textContent = q.question; //current question
+
+    var showChoice = q.choices; //answers for current question
+    //create a loop for questions, show question.loop choice and create buttons, attach event listener to choice buttons
+    for(var i = 0; i < showChoice.length; i++) {
+        var xChoices = showChoice[i];
+
+        var choiceBtns = document.createElement('button');
+            choiceBtns.textContent = xChoices;
+            choiceRef.append(choiceBtns);
 
 //event listener for choice buttom 
 
+choiceBtns.addEventListener("click", function (event) {
+    var userAnswr = event.target.textContent;
 
+    if (userAnswr === q.answer){
+        answerCorrect();
+    } else{
+        answerWrong()
+    }
+    //next question
+    currentQuestion++;
+//checking user input
+if (currentQuestion === allQuestions.length){
+    quizOver();
+}else {
+    showQuestion();
+}
+});
+}
+}
+//if answered correctly
+function answerCorrect() {
+    confirmAnswer.textContent = "correct";
+}
 
-//target img container for each question and set attribute to the img url 
+//if answered wrong
+function answerWrong() {
+    //subtract 10secs from clock
+    timeLeft -= 10;
+    confirmAnswer.textContent = "incorrect!";
+}
 
+//quiz over
+function quizOver(){
+    clearInterval(timer);
+    hideQ();
+    showResults();
+    hideTime();
+}
 //TIMER***  
 //Start timer when quiz starts
+
+var timeLeft = 100;
+var timeStart = spanEl;
+var timer;
+var timeEl = document.querySelector(".secondsLeft")
+
 function startTime(){
 
     timer = setInterval(function(){
@@ -118,26 +207,11 @@ function startTime(){
         spanEl.textContent = timeLeft;
         //
         //if the time left is < 0 clearInterval(timer) and end the game
-    }, 1000)
- 
+        if (timeLeft <= 0){ 
+            quizOver();
+        }
+    }, 1000);
 }
-//timer count function
-function count(){
-    timeLeft--;  // timeleft = timeleft -1
-    spanEl.textContent = timeLeft;
-    //
-    // clearInterval(timer)
-}
-
-//If question is answered incorrectly, time is subtracted from clock
-
-//Show question
-
-
-//After questions is answered, next question shows
-
-//When timer reaches 0, quiz ends
-
 
 //Quiz ends and user is taken to next page to log scores 
 

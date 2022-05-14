@@ -7,6 +7,8 @@
 
 # Site Preview 
 
+<p><img src="./assets/images/catquizpreview.png"><p>
+
 # Github Links
 
 - Repository: https://github.com/mxhuisken/hw4_quiz
