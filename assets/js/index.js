@@ -1,4 +1,5 @@
 var startBtn = document.querySelector(".startBtn");
+var submitBtn = document.getElementById("submit")
 var homePage = document.querySelector(".homePage");
 var showQuestions = document.getElementById("container");
 var spanEl = document.getElementById("secondsLeft")
@@ -10,8 +11,11 @@ var confirmAnswer = "";
 var clearChoices = document.querySelector(".choiceOpts");
 var imageEl = document.getElementById("image");
 var quizDone = document.getElementById("results");
+var finalScore = document.getElementById("userScore");
 var timeDone = document.getElementById("timer");
 var timeShow = document.querySelector(".showTime");
+var showScoresPage = document.getElementById("highScorePage");
+var hideResultsPage = document.getElementById("results");
 
 
 var allQuestions = [
@@ -61,7 +65,7 @@ var allQuestions = [
     {
         question: "What is the main purpose cats use their whiskers for?",
         choices: ["spacial detemination", "communication", "smelling", "picking up vibes"],
-        answer: "spacial determination",
+        answer: "spacial detemination",
         img: "./assets/images/whiskers.jpeg",
     },
 
@@ -191,6 +195,10 @@ function quizOver(){
     hideQ();
     showResults();
     hideTime();
+
+    var getUserScore = timeLeft;
+    finalScore.textContent = getUserScore;
+
 }
 //TIMER***  
 //Start timer when quiz starts
@@ -211,10 +219,79 @@ function startTime(){
             quizOver();
         }
     }, 1000);
+
 }
 
+    
+
+
 //Quiz ends and user is taken to next page to log scores 
+function showScores() {
+    
+    showScoresPage.style.cssText = `
+    display: block;
+    `
+    hideResultsPage.style.cssText = `
+    display: none;
+    `
+    
+    var userInfo = JSON.parse(localStorage.getItem("userScore")) || [];
+    
+    //score from high to lowest
+    userInfo.sort (function (a,b) {
+        return b-a;
+    });
+    
+    var info = userInfo.length;
+    for(var i = 0; i < info; i++) {
+        var liTag = userInfo[i];
+        console.log(liTag);
+        
+        var li = document.createElement("li");
+        li.textContent = liTag.name + "  /  " + liTag.score;
+        
+        var liParent = document.querySelector(".score-input");
+        liParent.appendChild(li);
+    };
+    
+}
+
+function clearStorage() {
+    
+    var clear = document.querySelector(".clear-scores");
+    
+    clear.addEventListener("click", function() {
+        localStorage.removeItem("userScore");
+        location.reload();
+    })
+}
+clearStorage();
 
 //Event Listeners 
 
 startBtn.addEventListener("click", startQuiz);
+
+//save scores in local storage 
+
+var initialsEl = document.getElementById("initials-el");
+
+submitBtn.addEventListener("click", function saveLocal() {
+    var userInitials = initialsEl.value.trim();
+    
+    if (userInitials !== ""){
+        var userInfo = JSON.parse(localStorage.getItem("userScore")) || [];
+        
+        var currentUser = {
+            name: userInitials,
+            score: timeLeft,
+        };
+        
+        userInfo.push(currentUser);
+        localStorage.setItem("userScore", JSON.stringify(userInfo));
+    } else if (userInitials === "") {
+        alert("pls fill in!");
+    }
+    
+    showScores();
+})
+

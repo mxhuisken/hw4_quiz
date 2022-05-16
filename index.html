@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel= "stylesheet" href="./assets/style.css">
-    <title>CATS! CATS! CATS!</title>
+    <title>CATS QUIZ</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Zen+Loop&display=swap" rel="stylesheet">
@@ -40,8 +40,22 @@
     <!--end game/scrores-->
 
    <div id="results" class="hide">
-        <h2>Finished!</h2>
+        <h2>FINISHED!</h2>
+        <h3>YOUR SCORE IS: <span id="userScore"></span></h3>
+        <p>
+            <input type="text" id="initials-el" placeholder="initials pls...">
+            <button id="submit">submit</button>
+        </p>
     </div> 
+
+    <div id="highScorePage" class="hideScores">
+        <h1>Highscores</h1>
+        <ol class="score-input"></ol>
+
+        <div class="return">
+            <a href="index.html"><button class="home">HOME</button></a>
+           <button class="clear-scores">CLEAR SCORES</button>
+    </div>
 
 </main>
 
